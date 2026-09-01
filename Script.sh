@@ -24,15 +24,15 @@ tabix -p vcf output_chr${CHR}.vcf.gz
 done
 
 # QC before GWAS
-bcftools view -i "DR2 >= 0.7" ${input} -Oz -o ${output}
+bcftools view -i "DR2 >= 0.7" ${vcf_file} -Oz -o ${vcf_qc}
 
 # GWAS pipeline
-plink --vcf ${input} --maf 0.01 --geno 0.2 --recode 12 --output-missing-genotype 0 --transpose --out output --allow-extra-chr
+plink --vcf ${vcf_qc} --maf 0.01 --geno 0.2 --recode 12 --output-missing-genotype 0 --transpose --out ${tped_prefix} --allow-extra-chr
 emmax-kin-intel64 -v -s -d 10 ${tped_prefix}
 emmax-intel64 -v -d 10 -t ${tped_prefix} -p ${pheno_file} -k ${kin_file} -c ${cov_file} -o ${output}
 
 # Conditional analysis
-gcta64 --bfile ${prefix} --maf 0.01 --cojo-p ${p_value} --cojo-file ${summary_statistics_of_phenotype}.ma --cojo-slct --cojo-actual-geno --out ${output}
+gcta64 --bfile ${bfile_prefix} --maf 0.01 --cojo-p ${p_value} --cojo-file ${summary_statistics_of_phenotype}.ma --cojo-slct --cojo-actual-geno --out ${output}
 
 # Fine mapping
 Rscript run_susie_rss.R --z ${gwas_summary_statistics} --ld ${reference_ld.matrix} --n ${sample_size} --L ${max_causal_variants} --out ${output}
