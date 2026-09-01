@@ -7,7 +7,6 @@ clean_fq2="trim/${sample}_2_val_2.fq.gz"
 # alignment
 bowtie2 -p 5 --very-sensitive -X 2000 -x ${index} -1 ${clean_fq1} -2 ${clean_fq2} | samtools sort -O bam -@ 5 -o - > ${sample}.bam
 samtools index ${sample}.bam
-samtools flagstat ${sample}.bam > ${sample}.raw.stat
 
 # remove PCR duplicates 
 sambamba markdup --overflow-list-size 600000  --tmpdir='./'  -r ${sample}.bam ${sample}.rmdup.bam
