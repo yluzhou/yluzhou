@@ -38,6 +38,13 @@ gcta64 --bfile ${prefix} --maf 0.01 --cojo-p ${p_value} --cojo-file ${summary_st
 Rscript run_susie_rss.R --z ${gwas_summary_statistics} --ld ${reference_ld.matrix} --n ${sample_size} --L ${max_causal_variants} --out ${output}
 
 # Annotation
+# annotation for SNPs and InDels
+perl convert2annovar.pl -keepindelref -format vcf4 -allsample -withfreq ${input} -outfile ${output_prefix}
+perl table_annovar.pl  ${input} /annovar/humandb -buildver hg38 -out ${output_prefix} -remove -protocol refGene -operation g -nastring . -polish
+# annotation for SVs
+AnnotSV -SVinputFile ${input} -outputFile ${output}
+
+
 
 
 
