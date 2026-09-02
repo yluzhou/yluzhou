@@ -15,6 +15,9 @@ samtools index ${sample}.bam
 # remove PCR duplicate
 sambamba markdup -r -p -t 8 ${sample}.bam ${sample}.rmdup.bam
 samtools index ${sample}.rmdup.bam
+samtools idxstats ${sample}.rmdup.bam | cut -f 1 | grep -v -E 'chrM|chrMT|MT' | xargs samtools view -b -f 2 -q 30 -@ 5 ${sample}.rmdup.bam > ${sample}.rmdup.rmchrM.bam
+samtools index ${sample}.rmdup.rmchrM.bam
+bedtools bamtobed -i ${sample}.rmdup.rmchrM.bam  > ${sample}.bed
 
 # filter blacklist
 bedtools intersect -v -a ${sample}.rmdup.rmchrM.bam -b hg38.blacklist.bed > ${sample}.blacklist_filtered.last.bam
