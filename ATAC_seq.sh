@@ -28,4 +28,4 @@ bedtools bamtobed -i ${sample}.blacklist_filtered.last.bam > ${sample}.last.bed
 macs3  callpeak -t ${sample}.blacklist_filtered.last.bam -g hs -f BAMPE -n ${sample_name} --outdir ${out}/ -q 0.05 --keep-dup all
 
 # generate bigwig file for visualization
-bamCoverage --normalizeUsing RPKM -b ${sample}.blacklist_filtered.last.bam -o ${output}.bw
+bamCoverage --normalizeUsing RPKM -b ${sample}.blacklist_filtered.last.bam -o ${sample}.atac.bw
