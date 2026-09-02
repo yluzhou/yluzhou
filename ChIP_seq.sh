@@ -27,3 +27,5 @@ bedtools bamtobed -i ${sample}.blacklist_filtered.last.bam > ${sample}.last.bed
 # call peaks
 macs3 callpeak -t ChIP.bam -c Control.bam -f BAM -n ${name} -g hs --outdir peaks/ -q 0.05 --keep-dup all
 
+# generate bigwig file for visualization
+bamCoverage --normalizeUsing RPKM -b ${sample}.blacklist_filtered.last.bam -o ${sample}.chip.bw
