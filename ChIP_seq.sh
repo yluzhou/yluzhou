@@ -25,7 +25,7 @@ samtools index ${sample}.blacklist_filtered.last.bam
 bedtools bamtobed -i ${sample}.blacklist_filtered.last.bam > ${sample}.last.bed
 
 # call peaks
-macs3 callpeak -t ${sample_treated}.bam -c Control.bam -f BAM -n ${name} -g hs --outdir peaks/ -q 0.05
+macs3 callpeak -t ${sample_treated}.blacklist_filtered.last.bam -c ${sample_control}.blacklist_filtered.last.bam -f BAM -n ${name} -g hs --outdir peaks/ -q 0.05
 
 # generate bigwig file for visualization
 bamCoverage --normalizeUsing RPKM -b ${sample}.blacklist_filtered.last.bam -o ${sample}.chip.bw
