@@ -15,17 +15,17 @@ samtools index ${sample}.bam
 # remove PCR duplicate
 sambamba markdup -r -p -t 8 ${sample}.bam ${sample}.rmdup.bam
 samtools index ${sample}.rmdup.bam
-samtools idxstats ${sample}.rmdup.bam | cut -f 1 | grep -v -E 'chrM|chrMT|MT' | xargs samtools view -b -f 2 -q 30 -@ 5 ${sample}.rmdup.bam > ${sample}.rmdup.rmchrM.bam
+samtools view -h -q 30 ${sample}.rmdup.bam | grep -v chrM | samtools sort -O bam -@ 5 -o - > ${sample}.rmdup.rmchrM.bam
 samtools index ${sample}.rmdup.rmchrM.bam
 bedtools bamtobed -i ${sample}.rmdup.rmchrM.bam  > ${sample}.bed
 
 # filter blacklist
-bedtools intersect -v -a ${sample}.rmdup.rmchrM.bam -b hg38.blacklist.bed > ${sample}.blacklist_filtered.last.bam
+bedtools intersect -v -a ${sample}.rmdup.rmchrM.bam -b hg38.blacklist.bed | samtools sort -O bam -@ 5 -o - > ${sample}.blacklist_filtered.last.bam
 samtools index ${sample}.blacklist_filtered.last.bam
 bedtools bamtobed -i ${sample}.blacklist_filtered.last.bam > ${sample}.last.bed
 
 # call peaks
-macs3 callpeak -t ChIP.bam -c Control.bam -f BAM -n ${name} -g hs --outdir peaks/ -q 0.05 --keep-dup all
+macs3 callpeak -t ${sample_treated}.bam -c Control.bam -f BAM -n ${name} -g hs --outdir peaks/ -q 0.05
 
 # generate bigwig file for visualization
 bamCoverage --normalizeUsing RPKM -b ${sample}.blacklist_filtered.last.bam -o ${sample}.chip.bw
