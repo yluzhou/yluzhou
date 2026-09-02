@@ -1,4 +1,8 @@
 # ATAC-seq analysis pipeline
+wget http://hgdownload.cse.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz
+gunzip -c hg38.fa.gz > hg38.fa
+bowtie2-build --threads 10 -f hg38.fa hg38
+index="hg38"
 
 trim_galore --illumina -q 25 --phred33 --length 35 -e 0.1 --stringency 4 --paired -o trim/ ${fq1} ${fq2}
 clean_fq1="trim/${sample}_1_val_1.fq.gz"
