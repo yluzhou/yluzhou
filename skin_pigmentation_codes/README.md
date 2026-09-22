@@ -1,1 +1,1 @@
-Codes for analyzing ATAC-Seq, RNA-Seq, ChIP-seq data, and GWAS analysis, selection analysis pipleline.
+Codes for analyzing ATAC-Seq, RNA-Seq, ChIP-seq data, and GWAS analysis pipleline.
